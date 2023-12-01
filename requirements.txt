@@ -1,0 +1,6 @@
+streamlit
+streamlit_authenticator
+streamlit_option_menu
+pandas
+joblib
+plotly
