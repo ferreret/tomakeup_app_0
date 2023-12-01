@@ -303,7 +303,9 @@ def run_prediccion(tinte: str, cantidad: int, rango: int) -> None:
         return
 
     # El valor del rango es un %, lo transformamos a un valor absoluto y lo redondeamos
-    valor_medio = round(cantidad * (rango / 100))
+    rango = round(cantidad * (rango / 100))
+
+
     # Predecimos la probabilidad de viscosidad para cada reactor
     dfs = predecir_viscosidad(dfs, loaded_model, "cantidad", cantidad, rango)
     mostrar_resultado_con_rango(dfs, tinte, "cantidad")
