@@ -1,6 +1,8 @@
 import streamlit as st
 import streamlit_authenticator as stauth
 from streamlit_option_menu import option_menu
+from pgs.pagina_acerca_de import pagina_acerca_de
+from pgs.pagina_eda import pagina_eda
 
 from pgs.pagina_inicio import pagina_inicio
 from pgs.pagina_prediccion import pagina_prediccion
@@ -48,7 +50,7 @@ def create_menu() -> None:
     with st.sidebar:
         selected_page = option_menu(
             "ToMakeUp",
-            ["Inicio", "Predición", "Entrenamiento", "Acerca de"],
+            ["Inicio", "EDA", "Predición", "Entrenamiento", "Acerca de"],
             menu_icon="hamburger",
             default_index=0,
         )
@@ -78,12 +80,14 @@ def create_menu() -> None:
 
     if selected_page == "Inicio":
         pagina_inicio(logged)
+    elif selected_page == "EDA":
+        pagina_eda(logged)
     elif selected_page == "Predición":
         pagina_prediccion(logged)
     elif selected_page == "Entrenamiento":
         pass
     elif selected_page == "Acerca de":
-        pass
+        pagina_acerca_de(logged)
 
 
 if __name__ == "__main__":

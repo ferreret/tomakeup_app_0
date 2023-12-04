@@ -13,6 +13,15 @@ CAPACIDAD_REACTORES = {
 
 
 def pagina_prediccion(logged: bool) -> None:
+    """
+    Function to display the prediction page for viscosity based on component proportions.
+
+    Parameters:
+    - logged (bool): Indicates whether the user is logged in or not.
+
+    Returns:
+    None
+    """
     st.subheader(
         ":test_tube: Predicción viscosidad por proporción de componentes", divider="red"
     )
@@ -278,7 +287,20 @@ def predecir_viscosidad(
 
 
 def run_prediccion(tinte: str, cantidad: int, rango: int) -> None:
+    """
+    Runs the prediction process for a given tinte, cantidad, and rango.
+
+    Args:
+        tinte (str): The selected tinte.
+        cantidad (int): The amount of tinte.
+        rango (int): The range of prediction.
+
+    Returns:
+        None
+    """
     componentes_df = read_data("componentes.csv")
+    # Rest of the code...
+
     # Selecciono el tinte que se eligió en el selectbox
     # y filtro el DataFrame de componentes por ese tinte
     componentes_df = componentes_df.loc[
@@ -304,7 +326,6 @@ def run_prediccion(tinte: str, cantidad: int, rango: int) -> None:
 
     # El valor del rango es un %, lo transformamos a un valor absoluto y lo redondeamos
     rango = round(cantidad * (rango / 100))
-
 
     # Predecimos la probabilidad de viscosidad para cada reactor
     dfs = predecir_viscosidad(dfs, loaded_model, "cantidad", cantidad, rango)
