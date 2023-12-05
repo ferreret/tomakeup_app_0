@@ -24,6 +24,7 @@ def pagina_inicio(logged: bool) -> None:
         Hay tres reactores, grande de 3000 Kg, mediano de 1000 Kg y pequeño de 500 Kg.        
         """
     )
+    st.write("")
 
     if not logged:
         st.warning(

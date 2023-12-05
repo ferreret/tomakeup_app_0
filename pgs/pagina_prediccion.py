@@ -62,6 +62,8 @@ def pagina_prediccion(logged: bool) -> None:
             try:
                 # Ejecuto la predicción
                 run_prediccion(tinte, cantidad, rango)
+                # Muestro animación de éxito
+                st.balloons()
             except Exception as e:
                 # Si ocurre un error, muestro un mensaje de error
                 st.error("Ocurrió un error al ejecutar la predicción")
