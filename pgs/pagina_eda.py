@@ -99,7 +99,9 @@ def run_eda():
 
 # ----------------------------------------------------------------------------------------------------------------------
 def correlacion_variables(eda_data: pd.DataFrame) -> None:
-    corr_matrix = eda_data.drop(columns=["fecha", "reactor", "resultado"]).corr().round(2)    
+    corr_matrix = (
+        eda_data.drop(columns=["fecha", "reactor", "resultado"]).corr().round(2)
+    )
 
     fig = px.imshow(
         corr_matrix,
@@ -123,7 +125,10 @@ def relacion_variable_variable(eda_data: pd.DataFrame) -> None:
         "Variable eje Y", eda_data.select_dtypes(include=["int64", "float64"]).columns
     )
 
-    fig = px.scatter(eda_data, x=x_var, y=y_var, color="resultado")
+    fig = px.scatter(
+        eda_data, x=x_var, y=y_var, color="resultado", size_max=15, opacity=0.5
+    )
+    fig.update_traces(marker={'size': 15})
 
     st.plotly_chart(fig, use_container_width=True)
 
