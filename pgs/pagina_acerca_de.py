@@ -1,7 +1,7 @@
 import streamlit as st
 
 
-def pagina_acerca_de(logged: bool) -> None:
+def pagina_acerca_de() -> None:
     # Mostramos la URL de ToMakeUp
     st.subheader("Acerca de")
 

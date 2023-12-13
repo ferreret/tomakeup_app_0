@@ -2,17 +2,13 @@ import joblib
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
+from constants import CAPACIDAD_REACTORES
 
 from data_repo import get_tintes, read_data
 
-CAPACIDAD_REACTORES = {
-    "grande": 3000,
-    "mediano": 1000,
-    "pequeño": 500,
-}
 
-
-def pagina_prediccion(logged: bool) -> None:
+# ----------------------------------------------------------------------------------------------------------------------
+def pagina_prediccion() -> None:
     """
     Function to display the prediction page for viscosity based on component proportions.
 
@@ -26,7 +22,7 @@ def pagina_prediccion(logged: bool) -> None:
         ":test_tube: Predicción viscosidad por proporción de componentes", divider="red"
     )
 
-    if not logged:
+    if not st.session_state["logged"]:
         st.warning("Inicia sesión para acceder a la predicción")
         return
 
@@ -70,6 +66,7 @@ def pagina_prediccion(logged: bool) -> None:
                 st.error(f"Error: {e}")
 
 
+# ----------------------------------------------------------------------------------------------------------------------
 def grado_llenado(cantidad: int, show_warning=True) -> tuple[float, float, float]:
     """En esta función validamos la cantidad de tinte a producir,
     a su vez, devolveremos el grado de llenado para cada uno de los reactores.
@@ -99,6 +96,7 @@ def grado_llenado(cantidad: int, show_warning=True) -> tuple[float, float, float
     )
 
 
+# ----------------------------------------------------------------------------------------------------------------------
 def crear_df_reactores(
     components: pd.DataFrame, grados_llenado: tuple[float, float, float], cantidad: int
 ) -> list[pd.DataFrame]:
@@ -137,6 +135,7 @@ def crear_df_reactores(
     return dfs
 
 
+# ----------------------------------------------------------------------------------------------------------------------
 def mostrar_resultado_sin_rango(dfs: list[pd.DataFrame], tinte: str) -> None:
     """
     Muestra la probabilidad de viscosidad para un tinte dado.
@@ -176,6 +175,7 @@ def mostrar_resultado_sin_rango(dfs: list[pd.DataFrame], tinte: str) -> None:
             st.info(message)
 
 
+# ----------------------------------------------------------------------------------------------------------------------
 def mostrar_resultado_con_rango(
     dfs: list[pd.DataFrame], tinte: str, variable: str
 ) -> None:
@@ -232,6 +232,7 @@ def mostrar_resultado_con_rango(
     st.plotly_chart(fig, use_container_width=True)
 
 
+# ----------------------------------------------------------------------------------------------------------------------
 def predecir_viscosidad(
     dfs: list[pd.DataFrame],
     model,
@@ -288,6 +289,7 @@ def predecir_viscosidad(
     return dfs
 
 
+# ----------------------------------------------------------------------------------------------------------------------
 def run_prediccion(tinte: str, cantidad: int, rango: int) -> None:
     """
     Runs the prediction process for a given tinte, cantidad, and rango.
