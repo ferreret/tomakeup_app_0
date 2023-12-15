@@ -62,6 +62,7 @@ def handle_authentication() -> bool:
     Returns:
         bool: Estado de autenticación del usuario (True si está autenticado, False en caso contrario).
     """
+
     config = load_auth_yaml()
     authenticator = stauth.Authenticate(
         config["credentials"],
@@ -93,6 +94,11 @@ def create_sidebar_menu() -> str:
     Returns:
         str: Nombre de la página seleccionada por el usuario.
     """
+
+    # Inicializamos la variable logged en caso de que no exista
+    if "logged" not in st.session_state:
+        st.session_state["logged"] = False
+
     with st.sidebar:
         # En el caso de que el usuario sea un administrador, añado la página de administración
         if (
