@@ -14,6 +14,10 @@ def pagina_inicio() -> None:
 
     st.write("")
 
+    # Inicializamos la variable logged en caso de que no exista
+    if "logged" not in st.session_state:
+        st.session_state["logged"] = False
+
     if not st.session_state["logged"]:
         st.warning(
             """
