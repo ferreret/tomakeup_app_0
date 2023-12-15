@@ -2,9 +2,10 @@ import joblib
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
-from constants import CAPACIDAD_REACTORES
 
+from constants import CAPACIDAD_REACTORES
 from data_repo import get_tintes, read_data
+from logger_config import logger
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -62,6 +63,7 @@ def pagina_prediccion() -> None:
                 st.balloons()
             except Exception as e:
                 # Si ocurre un error, muestro un mensaje de error
+                logger.error(f"Error: {e}")
                 st.error("Ocurrió un error al ejecutar la predicción")
                 st.error(f"Error: {e}")
 
@@ -171,6 +173,7 @@ def mostrar_resultado_sin_rango(dfs: list[pd.DataFrame], tinte: str) -> None:
         message = f"Reactor {row.reactor}: {row.probabilidad:.2f}% de probabilidad de viscosidad negativa"
         if i == 0:
             st.success(message)
+            logger.info(message)
         else:
             st.info(message)
 
@@ -180,48 +183,45 @@ def mostrar_resultado_con_rango(
     dfs: list[pd.DataFrame], tinte: str, variable: str
 ) -> None:
     """
-    Plots the probability of negative viscosity for a given dye, based on the amount produced.
+    Plots the probability of negative viscosity for a given dye, based on the amount produced,
+    and prints the minimum probability for each reactor with the corresponding variable value.
 
     Args:
         dfs (list[pd.DataFrame]): A list of pandas DataFrames containing the probability of negative viscosity
             for each reactor, sorted by the amount of dye produced.
         tinte (str): The name of the dye being produced.
-
-    Returns:
-        None
     """
-    # Ordenamos por cantidad
+    # Ordenamos por cantidad y preparamos los trazos de los gráficos
+    trazos = []
+    nombres_reactores = ["Reactor Grande", "Reactor Mediano", "Reactor Pequeño"]
+
     for i, df in enumerate(dfs):
         if df is not None:
-            dfs[i] = df.sort_values(by=[variable])
+            df_sorted = df.sort_values(by=[variable])
+            dfs[i] = df_sorted
 
-    trace1 = go.Scatter(
-        x=dfs[0][variable],
-        y=dfs[0]["probabilidad"],
-        mode="lines",
-        name="Reactor Grande",
-    )
-    if dfs[1] is not None:
-        trace2 = go.Scatter(
-            x=dfs[1][variable],
-            y=dfs[1]["probabilidad"],
-            mode="lines",
-            name="Reactor Mediano",
-        )
-    if dfs[2] is not None:
-        trace3 = go.Scatter(
-            x=dfs[2][variable],
-            y=dfs[2]["probabilidad"],
-            mode="lines",
-            name="Reactor Pequeño",
-        )
-    if dfs[1] is not None and dfs[2] is not None:
-        fig = go.Figure(data=[trace1, trace2, trace3])
-    elif dfs[1] is not None:
-        fig = go.Figure(data=[trace1, trace2])
-    else:
-        fig = go.Figure(data=[trace1])
+            # Agregar trazo al gráfico
+            trazo = go.Scatter(
+                x=df_sorted[variable],
+                y=df_sorted["probabilidad"],
+                mode="lines",
+                name=nombres_reactores[i],
+            )
+            trazos.append(trazo)
 
+            # Encontrar el mínimo de probabilidad y el valor correspondiente de la variable
+            min_prob = df_sorted["probabilidad"].min()
+            valor_variable_min_prob = df_sorted[df_sorted["probabilidad"] == min_prob][
+                variable
+            ].iloc[0]
+
+            # Mostrar esta información
+            logger.info(
+                f"{nombres_reactores[i]}: Probabilidad mínima de {min_prob}% a {valor_variable_min_prob} Kg de {tinte}"
+            )
+
+    # Crear figura con los trazos
+    fig = go.Figure(data=trazos)
     fig.update_layout(
         title=f"Probabilidad de viscosidad para el tinte {tinte}",
         xaxis_title=f"{variable} (Kg)",
@@ -302,6 +302,11 @@ def run_prediccion(tinte: str, cantidad: int, rango: int) -> None:
     Returns:
         None
     """
+
+    logger.info(
+        f"Predicción para el tinte {tinte} con {cantidad} Kg con rango {rango} %"
+    )
+
     componentes_df = read_data("componentes.csv")
     # Rest of the code...
 
@@ -313,6 +318,7 @@ def run_prediccion(tinte: str, cantidad: int, rango: int) -> None:
 
     # Compruebo que el DataFrame de componentes no esté vacío
     if componentes_df.empty:
+        logger.error("No se encontraron componentes para el tinte seleccionado")
         st.error("No se encontraron componentes para el tinte seleccionado")
         return
 

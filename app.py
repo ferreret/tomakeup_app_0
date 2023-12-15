@@ -3,12 +3,14 @@ import streamlit_authenticator as stauth
 import yaml
 from streamlit_option_menu import option_menu
 from yaml.loader import SafeLoader
-from constants import HTML_BANNER
 
+from constants import HTML_BANNER
 from pgs.pagina_acerca_de import pagina_acerca_de
+from pgs.pagina_admin import pagina_admin
 from pgs.pagina_eda import pagina_eda
 from pgs.pagina_inicio import pagina_inicio
 from pgs.pagina_prediccion import pagina_prediccion
+from logger_config import logger
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -24,7 +26,16 @@ def main() -> None:
         HTML_BANNER,
         unsafe_allow_html=True,
     )
-    create_menu()
+    # Hago un control de excepciones general para que la aplicación no se caiga
+    try:
+        create_menu()
+    except Exception as e:
+        logger.error(e)
+        st.error(
+            "¡Algo ha fallado! :sweat_smile: Por favor, reinicia la aplicación y vuelve a intentarlo."
+        )
+        st.error(e)
+        st.stop()
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -83,13 +94,34 @@ def create_sidebar_menu() -> str:
         str: Nombre de la página seleccionada por el usuario.
     """
     with st.sidebar:
-        selected_page = option_menu(
-            "Menú",
-            ["Inicio", "EDA", "Predición", "Entrenamiento", "Acerca de"],
-            menu_icon="hamburger",
-            default_index=0,
-        )
+        # En el caso de que el usuario sea un administrador, añado la página de administración
+        if (
+            st.session_state["logged"]
+            and st.session_state["username"] in load_auth_yaml()["admins"]
+        ):
+            selected_page = option_menu(
+                "Menú",
+                [
+                    "Inicio",
+                    "EDA",
+                    "Predición",
+                    "Entrenamiento",
+                    "Acerca de",
+                    "Admin",
+                ],
+                menu_icon="hamburger",
+                default_index=0,
+            )
+        else:
+            selected_page = option_menu(
+                "Menú",
+                ["Inicio", "EDA", "Predición", "Entrenamiento", "Acerca de"],
+                menu_icon="hamburger",
+                default_index=0,
+            )
+
         st.session_state["logged"] = handle_authentication()
+
         return selected_page
 
 
@@ -105,6 +137,7 @@ def create_menu() -> None:
         "EDA": pagina_eda,
         "Predición": pagina_prediccion,
         "Acerca de": pagina_acerca_de,
+        "Admin": pagina_admin,
     }
 
     selected_page = create_sidebar_menu()

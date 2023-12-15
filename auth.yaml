@@ -19,3 +19,6 @@ cookie:
 preauthorized:
   emails:
   - melsby@gmail.com
+admins:
+  - nicolas
+  - guillermo

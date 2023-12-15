@@ -1,11 +1,10 @@
 import pandas as pd
 import plotly.express as px
-
 import streamlit as st
-
 
 from constants import EDA_DESCRIPTION, PLOTLY_THEMES
 from data_repo import preprocess_data_eda, read_data
+from logger_config import logger
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -24,6 +23,10 @@ def check_logged_in() -> bool:
 
 # ----------------------------------------------------------------------------------------------------------------------
 def pagina_eda() -> None:
+    """
+    Esta función ejecuta un análisis exploratorio de datos (EDA) en una aplicación Streamlit.
+    Muestra diferentes visualizaciones y estadísticas de los datos para facilitar su comprensión y análisis.
+    """
     st.subheader("🔍 Análisis Exploratorio de Datos", divider="red")
 
     if not check_logged_in():
@@ -31,6 +34,16 @@ def pagina_eda() -> None:
 
     st.write(EDA_DESCRIPTION)
 
+    try:
+        run_eda()
+    except Exception as e:
+        logger.error(e)
+        st.error(f"Error: {e}")
+        st.stop()
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+def run_eda() -> None:
     eda_data = preprocess_data_eda()
     eda_data["resultado"] = eda_data["target"].map(
         {0: "Viscosidad correcta", 1: "Viscosidad incorrecta"}
@@ -76,7 +89,6 @@ def pagina_eda() -> None:
 
     with st.expander("Correlación entre las variables"):
         plot_correlacion_variables(eda_data)
-    # run_eda()
 
 
 # ----------------------------------------------------------------------------------------------------------------------
