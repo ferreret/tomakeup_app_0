@@ -28,7 +28,7 @@ def setup_logger():
     >>> logger.info("Mensaje de información")
     """
     logger = logging.getLogger("tomakeup_logger")
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.DEBUG)  
 
     # Creamos un directorio para los archivos de registro si no existe
     log_directory = "logs"

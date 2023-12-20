@@ -55,6 +55,10 @@ def pagina_entrenamiento() -> None:
     """
     st.subheader("Entrenamiento modelo predictivo, (XGBoost)", divider="red")
 
+    if not st.session_state["logged"]:
+        st.warning("Inicia sesión para acceder a la predicción")
+        return
+
     training_file = st.file_uploader(
         "Sube el fichero de entrenamiento", type=["csv"], accept_multiple_files=False
     )

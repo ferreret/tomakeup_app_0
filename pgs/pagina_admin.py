@@ -22,6 +22,10 @@ def pagina_admin() -> None:
     """
     st.subheader("Página de administración", divider="red")
 
+    if not st.session_state["logged"]:
+        st.warning("Inicia sesión para acceder a la predicción")
+        return
+
     show_log_files()
     reset_model_data()
 
