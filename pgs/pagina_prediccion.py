@@ -1,9 +1,10 @@
+import os
 import joblib
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-from constants import CAPACIDAD_REACTORES
+from constants import CAPACIDAD_REACTORES, RUTA_MODELO, RUTA_MODELO_USUARIO
 from data_repo import get_tintes, read_data
 from logger_config import logger
 
@@ -326,8 +327,13 @@ def run_prediccion(tinte: str, cantidad: int, rango: int) -> None:
     grados_llenado = grado_llenado(cantidad)
     # Creo los DataFrames para cada reactor
     dfs = crear_df_reactores(componentes_df, grados_llenado, cantidad)
+
     # Cargamos el modelo
-    loaded_model = joblib.load("models/xgb_viscosity.joblib")
+    # Si existe el model de usuario, cargamos el modelo de usuario, si no el modelo por defecto
+    if os.path.isfile(RUTA_MODELO_USUARIO):
+        loaded_model = joblib.load(RUTA_MODELO_USUARIO)
+    else:
+        loaded_model = joblib.load(RUTA_MODELO)
 
     if rango == 0:
         predecir_viscosidad(dfs, loaded_model, "cantidad", cantidad, rango)

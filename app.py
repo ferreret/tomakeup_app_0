@@ -8,6 +8,7 @@ from constants import HTML_BANNER
 from pgs.pagina_acerca_de import pagina_acerca_de
 from pgs.pagina_admin import pagina_admin
 from pgs.pagina_eda import pagina_eda
+from pgs.pagina_entrenamiento import pagina_entrenamiento
 from pgs.pagina_inicio import pagina_inicio
 from pgs.pagina_prediccion import pagina_prediccion
 from logger_config import logger
@@ -101,30 +102,30 @@ def create_sidebar_menu() -> str:
 
     with st.sidebar:
         # En el caso de que el usuario sea un administrador, añado la página de administración
-        if (
-            st.session_state["logged"]
-            and st.session_state["username"] in load_auth_yaml()["admins"]
-        ):
-            selected_page = option_menu(
-                "Menú",
-                [
-                    "Inicio",
-                    "EDA",
-                    "Predición",
-                    "Entrenamiento",
-                    "Acerca de",
-                    "Admin",
-                ],
-                menu_icon="hamburger",
-                default_index=0,
-            )
-        else:
-            selected_page = option_menu(
-                "Menú",
-                ["Inicio", "EDA", "Predición", "Entrenamiento", "Acerca de"],
-                menu_icon="hamburger",
-                default_index=0,
-            )
+        # if (
+        #     st.session_state["logged"]
+        #     and st.session_state["username"] in load_auth_yaml()["admins"]
+        # ):
+        selected_page = option_menu(
+            "Menú",
+            [
+                "Inicio",
+                "EDA",
+                "Predición",
+                "Entrenamiento",
+                "Admin",
+                "Acerca de",
+            ],
+            menu_icon="hamburger",
+            default_index=0,
+        )
+        # else:
+        #     selected_page = option_menu(
+        #         "Menú",
+        #         ["Inicio", "EDA", "Predición", "Entrenamiento", "Acerca de"],
+        #         menu_icon="hamburger",
+        #         default_index=0,
+        #     )
 
         st.session_state["logged"] = handle_authentication()
 
@@ -142,6 +143,7 @@ def create_menu() -> None:
         "Inicio": pagina_inicio,
         "EDA": pagina_eda,
         "Predición": pagina_prediccion,
+        "Entrenamiento": pagina_entrenamiento,
         "Acerca de": pagina_acerca_de,
         "Admin": pagina_admin,
     }

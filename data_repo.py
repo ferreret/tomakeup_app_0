@@ -1,5 +1,12 @@
+import os
 import pandas as pd
 import streamlit as st
+
+from constants import (
+    ARCHIVO_DATOS_ENTRENAMIENTO_USUARIO,
+    CAPACIDAD_REACTORES,
+    RUTA_DATOS_ENTRENAMIENTO_USUARIO,
+)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -29,8 +36,7 @@ def get_tintes() -> list[str]:
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-@st.cache_data
-def read_data(file_name: str) -> pd.DataFrame:
+def read_data(file_name: str, subfolder="static_data") -> pd.DataFrame:
     """
     Reads a specified .csv file from the 'data' directory and returns it as a pandas DataFrame.
 
@@ -40,11 +46,10 @@ def read_data(file_name: str) -> pd.DataFrame:
     Returns:
         pd.DataFrame: A DataFrame representing the specified .csv file.
     """
-    return pd.read_csv(f"static_data/{file_name}")
+    return pd.read_csv(f"{subfolder}/{file_name}")
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-@st.cache_data
 def preprocess_data_eda():
     """
     Preprocesses the orders data by performing various transformations and merging it with components data.
@@ -52,16 +57,16 @@ def preprocess_data_eda():
     Returns:
         DataFrame: The preprocessed data with additional columns and merged data.
     """
-    orders_data = read_data("datos_entrenamiento.csv")
+    if os.path.exists(RUTA_DATOS_ENTRENAMIENTO_USUARIO):
+        orders_data = read_data(
+            ARCHIVO_DATOS_ENTRENAMIENTO_USUARIO, subfolder="user_data"
+        )
+    else:
+        orders_data = read_data(ARCHIVO_DATOS_ENTRENAMIENTO_USUARIO)
+
     components_data = read_data("componentes.csv")
 
-    substitucion = {
-        "grande": 3000,
-        "mediano": 1000,
-        "pequeño": 500,
-    }
-
-    orders_data["capacidad_reactor"] = orders_data["reactor"].map(substitucion)
+    orders_data["capacidad_reactor"] = orders_data["reactor"].map(CAPACIDAD_REACTORES)
     orders_data["grado_llenado"] = (
         (orders_data["cantidad"] / orders_data["capacidad_reactor"]) * 100
     ).round(2)

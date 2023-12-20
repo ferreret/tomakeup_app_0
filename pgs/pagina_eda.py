@@ -3,7 +3,7 @@ import plotly.express as px
 import streamlit as st
 
 from constants import EDA_DESCRIPTION, PLOTLY_THEMES
-from data_repo import preprocess_data_eda, read_data
+from data_repo import preprocess_data_eda
 from logger_config import logger
 
 
@@ -35,7 +35,8 @@ def pagina_eda() -> None:
     st.write(EDA_DESCRIPTION)
 
     try:
-        run_eda()
+        with st.spinner("Analizando datos..."):
+            run_eda()
     except Exception as e:
         logger.error(e)
         st.error(f"Error: {e}")
@@ -44,6 +45,29 @@ def pagina_eda() -> None:
 
 # ----------------------------------------------------------------------------------------------------------------------
 def run_eda() -> None:
+    """
+    Realiza y muestra un Análisis Exploratorio de Datos (EDA) en la aplicación Streamlit.
+
+    Esta función procesa los datos para el EDA, mapea el valor de la columna 'target' a categorías
+    más legibles y despliega varios elementos en la interfaz de usuario para explorar los datos.
+    Incluye visualizaciones y estadísticas descriptivas de los datos.
+
+    El EDA se realiza mediante los siguientes pasos:
+    - Preprocesamiento de datos para el EDA.
+    - Mapeo de los valores de 'target' a categorías de viscosidad.
+    - Despliegue de un dataframe con los datos procesados.
+    - Selección de un tema de colores para las visualizaciones.
+    - Visualización de la distribución del 'target' en un gráfico de tarta.
+    - Presentación de estadísticas descriptivas de los datos.
+    - Visualización de la distribución de la producción por reactor.
+    - Histogramas de variables numéricas.
+    - Gráficos que muestran la relación entre variables y la viscosidad.
+    - Gráficos de dispersión para explorar relaciones entre distintas variables.
+    - Mapa de calor de correlación entre variables.
+
+    No se reciben parámetros y no se retorna ningún valor. La función solo afecta la interfaz de usuario
+    de la aplicación Streamlit, mostrando visualizaciones y estadísticas para análisis de datos.
+    """
     eda_data = preprocess_data_eda()
     eda_data["resultado"] = eda_data["target"].map(
         {0: "Viscosidad correcta", 1: "Viscosidad incorrecta"}
