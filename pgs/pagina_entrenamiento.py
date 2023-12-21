@@ -30,6 +30,7 @@ from constants import (
     TOOLTIP_SCALE_POS_WEIGHT,
     TOOLTIP_SEED,
     TOOLTIP_TEST_SIZE,
+    USUARIO_FOLDER,
 )
 from data_repo import read_data
 from logger_config import logger
@@ -332,6 +333,10 @@ def save_user_data_model(model):
     # El archivo de entrenamiento se guarda en la carpeta "tmp" con el nombre "datos_entrenamiento.csv".
     # lo guardo en la carpeta user_data
     ruta_fichero_tmp = os.path.join(TEMP_FOLDER, ARCHIVO_DATOS_ENTRENAMIENTO_USUARIO)
+
+    # Compruebo si existe la carpeta user_data, si no existe la creo
+    if not os.path.exists(USUARIO_FOLDER):
+        os.makedirs(USUARIO_FOLDER, exist_ok=True)
 
     # Si existen los datos de entrenamiento en la carpeta user_data, los borro
     if os.path.exists(RUTA_DATOS_ENTRENAMIENTO_USUARIO):

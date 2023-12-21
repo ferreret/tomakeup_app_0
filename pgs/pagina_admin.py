@@ -1,5 +1,7 @@
 import os
+import platform
 import streamlit as st
+from constants import TEMP_FOLDER, USUARIO_FOLDER
 
 from util import download_link
 from logger_config import logger
@@ -70,6 +72,7 @@ def reset_model_data() -> None:
     en las carpetas 'user_data' y 'tmp'. Si la operación es exitosa, muestra un mensaje de éxito; en caso de error,
     muestra un mensaje de error y registra el error en el log.
 
+    
     No se reciben parámetros y no se retorna ningún valor. La función solo afecta la interfaz de usuario
     de la aplicación Streamlit y realiza operaciones de sistema para borrar archivos.
     """
@@ -82,10 +85,17 @@ def reset_model_data() -> None:
 
     if st.button("Restaurar"):
         try:
-            # Borro los datos que haya en la carpeta user_data
-            os.system("rm -rf user_data/*")
-            # Borro los datos de la carpeta tmp
-            os.system("rm -rf tmp/*")
+            system_os = platform.system()
+            if system_os == "Windows":
+                # Borro los datos que haya en la carpeta user_data
+                # Comandos para Windows
+                os.system(f"del /Q {USUARIO_FOLDER}\\*.*")
+                os.system(f"del /Q {TEMP_FOLDER}\\*.*")
+            else:
+                # Borro los datos que haya en la carpeta user_data
+                os.system(f"rm -rf {USUARIO_FOLDER}/*")
+                # Borro los datos de la carpeta tmp
+                os.system(f"rm -rf {TEMP_FOLDER}/*")
         except Exception as e:
             st.error(f"Error al borrar los datos: {e}")
             logger.error(f"Error al borrar los datos: {e}")

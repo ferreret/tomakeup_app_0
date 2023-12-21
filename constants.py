@@ -82,6 +82,7 @@ CAPACIDAD_REACTORES = {
 }
 
 RUTA_MODELO = "static_data/xgb_viscosity.joblib"
+USUARIO_FOLDER = "user_data"
 RUTA_MODELO_USUARIO = "user_data/xgb_viscosity.joblib"
 
 # Página de entrenamiento ------------------------------------------------------------------------------
