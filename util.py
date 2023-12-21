@@ -2,7 +2,6 @@ import base64
 
 import streamlit as st
 
-
 # ----------------------------------------------------------------------------------------------------------------------
 def get_binary_file_downloader_html(bin_file, file_label="File") -> str:
     """
