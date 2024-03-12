@@ -73,7 +73,14 @@ def handle_authentication() -> bool:
         config["preauthorized"],
     )
 
-    authenticator.login("Inicio de sesión")
+    authenticator.login(
+        fields={
+            "Form name": "Inicio de sesión",
+            "Username": "Nombre de usuario",
+            "Password": "Contraseña",
+            "Login": "Iniciar sesión",
+        }
+    )
 
     if st.session_state["authentication_status"]:
         authenticator.logout("Logout", "main", key="unique_key")
