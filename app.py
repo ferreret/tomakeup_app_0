@@ -1,8 +1,8 @@
 import streamlit as st
-import streamlit_authenticator as stauth
-import yaml
-from streamlit_option_menu import option_menu
-from yaml.loader import SafeLoader
+import streamlit_authenticator as stauth  # type: ignore
+import yaml  # type: ignore
+from streamlit_option_menu import option_menu  # type: ignore
+from yaml.loader import SafeLoader  # type: ignore
 
 from constants import HTML_BANNER
 from pgs.pagina_acerca_de import pagina_acerca_de
@@ -90,6 +90,7 @@ def handle_authentication() -> bool:
         st.error("Username/password no es correcto")
     elif st.session_state["authentication_status"] is None:
         st.warning("Introduce tus credenciales")
+        st.info("Utiliza 'test / test' para probar la aplicación")
 
     return False
 
@@ -163,6 +164,11 @@ def create_menu() -> None:
 
 # ----------------------------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
-    # hashed_passwords = stauth.Hasher(["nicolas", "guillermo", "lakme"]).generate()
+    # hashed_passwords = stauth.Hasher(
+    #     [
+    #         "nicolas",
+    #         "test",
+    #     ]
+    # ).generate()
     # print(hashed_passwords)
     main()

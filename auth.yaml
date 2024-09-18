@@ -4,14 +4,10 @@ credentials:
       email: ferreret@gmail.com
       name: Nicolás Barceló
       password: $2b$12$Z4FO1SyKqKrpRfTpoSLEhehURIdIjGUJctQyL9JOJZNbLiY.pKHLK
-    guillermo:
-      email: guillermoalmandozrios@gmail.com
-      name: Guillermo Almandoz
-      password: $2b$12$SoG/yu85JGYFyez1RqBHLewjcFK28E3RGRQm006ty0BlyKc6SGEH.
-    lakme:
-      email: lakme@gmail.com
-      name: Lakme User
-      password: $2b$12$BZ1a6BqTMFxYt3qgQ/160OvA/0shjg//WoLUHcvgDDbQWkoS/EeXS
+    test:
+      email: ferreret.develop@gmail.com
+      name: Test User
+      password: $2b$12$scbS9.3yJuDIEwYHpNtHEuIcpTMRRTM.Up0dpX1F4pPHgz8aqfdZC
 cookie:
   expiry_days: 30
   key: 7366dd1e16754eaabefb5a6b73173378 # Must be string
@@ -21,4 +17,4 @@ preauthorized:
   - melsby@gmail.com
 admins:
   - nicolas
-  - guillermo
+  - test
